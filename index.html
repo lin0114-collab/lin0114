@@ -140,3 +140,250 @@
             font-size: 17px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 252, 241, 0.3);
+        }
+
+        /* 결과 창 구역 */
+        .result-card {
+            display: none;
+            margin-top: 25px;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .res-icon {
+            font-size: 65px;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: floater 3s infinite ease-in-out;
+        }
+
+        @keyframes floater {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .res-type {
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .res-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .res-sub {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+
+        .res-desc {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #d1d4dc;
+            text-align: left;
+            background-color: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔮 운명의 타로 나침반</h1>
+    <p class="subtitle">보고 싶은 사주 테마를 직접 선택해서 확인하세요</p>
+
+    <div class="input-box">
+        <label>생년월일 선택</label>
+        <div class="flex-inputs">
+            <select id="month">
+                <option value="">월</option>
+                <script>for(let i=1; i<=12; i++) document.write(`<option value="${i}">${i}월</option>`);</script>
+            </select>
+            <select id="day">
+                <option value="">일</option>
+                <script>for(let i=1; i<=31; i++) document.write(`<option value="${i}">${i}일</option>`);</script>
+            </select>
+        </div>
+
+        <label>태어난 시간</label>
+        <input type="time" id="time" value="12:00">
+    </div>
+
+    <label style="text-align: left; margin-left: 5px;">알고 싶은 사주 테마 선택</label>
+    <div class="tab-container">
+        <button class="tab-btn active btn-star" onclick="switchTab('star')">별자리 사주</button>
+        <button class="tab-btn btn-flower" onclick="switchTab('flower')">탄생화 사주</button>
+        <button class="tab-btn btn-gem" onclick="switchTab('gem')">탄생석 사주</button>
+    </div>
+
+    <button class="submit-btn" onclick="generateFortune()">선택한 운명 확인하기 🔍</button>
+
+    <div id="resultCard" class="result-card">
+        <div class="res-type" id="outType">THE STARS</div>
+        <div class="res-icon" id="outIcon">🌌</div>
+        <div class="res-title" id="outTitle">결과 타이틀</div>
+        <div class="res-sub" id="outSub">부제목</div>
+        <div class="res-desc" id="outDesc">상세 사주 내용이 이곳에 표시됩니다.</div>
+    </div>
+</div>
+
+<script>
+    // 현재 선택된 사주 탭 상태 관리 ('star', 'flower', 'gem')
+    let currentTab = 'star';
+
+    // 탭 전환 기능
+    function switchTab(type) {
+        currentTab = type;
+        
+        // 모든 탭 버튼 활성화 클래스 제거
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // 클릭한 버튼만 활성화
+        if(type === 'star') document.querySelector('.btn-star').classList.add('active');
+        if(type === 'flower') document.querySelector('.btn-flower').classList.add('active');
+        if(type === 'gem') document.querySelector('.btn-gem').classList.add('active');
+
+        // 이미 결과창이 켜져 있다면, 탭을 바꿨을 때 실시간 반영해 주면 센스 만점
+        if(document.getElementById("resultCard").style.display === "block") {
+            generateFortune();
+        }
+    }
+
+    // 데이터셋 정의
+    const starData = [
+        { name: "염소자리", start: [12, 22], end: [1, 19], emoji: "🐐", title: "철벽 치는 AI 로봇형 인간", desc: "은근히 계획 중독자라 인생 계획표를 분 단위로 짜는 타입. 겉으로는 조용해 보이지만 속으로는 이미 우주 정복 시나리오 다 짜놓은 무서운 사람입니다." },
+        { name: "물병자리", start: [1, 20], end: [2, 18], emoji: "👽", title: "지구에 잘못 불시착한 외계인", desc: "남들이 '예스' 할 때 혼자 '왜?'라고 외치는 독보적인 마이웨이. 특이하다는 말을 들으면 모욕이 아니라 칭찬으로 받아들이는 맑눈광 기질이 다분합니다." },
+        { name: "물고기자리", start: [2, 19], end: [3, 20], emoji: "🧜", title: "현실 도피 만렙 감성 장인", desc: "하루 평균 4시간 이상 상상의 나래를 펼치는 프로 망상러. 공감 능력이 너무 뛰어나 길가에 굴러가는 낙엽만 봐도 눈물 찔끔 흘릴 수 있는 촉촉한 영혼의 소유자입니다." },
+        { name: "양자리", start: [3, 21], end: [4, 19], emoji: "♈", title: "행동이 생각보다 빠른 인간 불도저", desc: "말보다 주먹과 행동이 먼저 나가는 타입. 일단 지르고 나서 수습하는 스타일이지만, 특유의 불타오르는 추진력으로 어떻게든 결과를 만들어내고야 마는 야생마입니다." },
+        { name: "황소자리", start: [4, 20], end: [5, 20], emoji: "🐂", title: "침대와 물아일체된 미식가", desc: "인생의 행복 순위 1위가 맛있는 음식 먹기, 2위가 누워있기인 평화주의자. 겉은 순해 보이지만 자기가 정한 선을 넘으면 황소고집이 발동해 그 누구도 꺾을 수 없습니다." },
+        { name: "쌍둥이자리", start: [5, 21], end: [6, 21], emoji: "🎭", title: "자아가 4개쯤 있는 프로 수다꾼", desc: "한시도 입을 쉬지 않거나 머릿속으로 끊임없이 수다를 떠는 정보 과부하 인간. 이리저리 호기심은 많아서 이것저것 다 건드리지만 진득하게 끝까지 하는 건 별로 없는 매력쟁이입니다." },
+        { name: "게자리", start: [6, 22], end: [7, 22], emoji: "🦀", title: "쿠쿠다스 멘탈의 방구석 마더 테레사", desc: "내 사람들에게는 쓸개까지 빼줄 정도로 다정하지만, 한 번 마음에 상처를 입으면 혼자만의 동굴로 들어가 버리는 타입. 집돌이/집순이 끝판왕입니다." },
+        { name: "사자자리", start: [7, 23], end: [8, 22], emoji: "🦁", title: "주인공이 아니면 죽음을 달라는 관종", desc: "어디서나 센터에 서야 직성이 풀리는 본투비 연예인 체질. 칭찬을 먹고 자라기 때문에 '멋있다', '최고다' 한 마디만 해주면 간이라도 빼주는 단순하고 의리 넘치는 성격입니다." },
+        { name: "처녀자리", start: [8, 23], end: [9, 22], emoji: "🕵️", title: "인간 엑셀(Excel) 피지컬 버전", desc: "강박증과 정리 정돈의 끝판왕. 남들의 허점이 귀신같이 눈에 보여서 속으로 잔소리를 삼키느라 바쁩니다. 하지만 그만큼 일 처리 하나는 완벽하게 해내는 능력자!" },
+        { name: "천칭자리", start: [9, 23], end: [10, 23], emoji: "⚖️", title: "결정 장애를 앓고 있는 평화주의자", desc: "짜장면이냐 짬뽕이냐만 가지고도 30분 동안 고뇌할 수 있는 우유부단함의 아이콘. 하지만 모두에게 친절하고 매너가 좋아서 어딜 가나 인기가 많고 비주얼이 훌륭한 편입니다." },
+        { name: "전갈자리", start: [10, 24], end: [11, 22], emoji: "🦂", title: "비밀을 품은 치명적인 다크 히어로", desc: "포커페이스의 달인이자 은근한 집착 끝판왕. 나를 배신한 사람은 평생 기억하지만, 한 번 신뢰를 준 사람에게는 목숨도 걸 수 있는 알면 알수록 진국인 캐릭터입니다." },
+        { name: "사수자리", start: [11, 23], end: [12, 21], emoji: "🏹", title: "영혼에 브레이크가 없는 자유 영혼", desc: "구속받는 것을 세상에서 가장 싫어하고 언제든 떠날 준비가 되어 있는 나그네. 긍정 회로가 너무 과하게 돌아가서 가끔 대책 없어 보이지만, 그 맑은 매력에 다들 빠져듭니다." }
+    ];
+
+    const flowerData = {
+        1: { name: "수선화", emoji: "🌼", title: "나르시시즘의 귀환", desc: "자기애와 당당함이 최고의 무기인 타입! 스스로에 대한 프라이드가 높아서 남들의 시선에 쉽게 휘둘리지 않는 멘탈 갑 성향입니다." },
+        2: { name: "제비꽃", emoji: "💜", title: "수줍음 속에 감춰진 씬스틸러", desc: "조용해 보이지만 필요한 순간에 엄청난 존재감을 발휘하는 은근한 관종력을 지니고 있습니다. 성실함과 은은한 매력으로 승부합니다." },
+        3: { name: "데이지", emoji: "🌼", title: "순수 지수 100% 무해한 영혼", desc: "평화와 맑고 깨끗함을 상징하는 당신! 사기를 당하기 쉬운 맑은 영혼을 지녔으니 세상의 쓴맛을 방어할 약간의 까칠함을 장착할 필요가 있습니다." },
+        4: { name: "금잔화", emoji: "🧡", title: "지독한 몰입도를 가진 열정가", desc: "한 번 꽂힌 취미, 사람, 일에는 영혼까지 불태우는 완벽한 몰입형 인간. 쉽게 타오르지만 식을 때도 차갑게 식는 편입니다." },
+        5: { name: "은방울꽃", emoji: "🔔", title: "이 구역의 공식 힐러(Healer)", desc: "주변 사람들의 고민을 다 들어주고 위로해 주는 따뜻한 상담사 체질. 정작 본인의 스트레스는 잘 풀지 못하니 스스로를 챙겨야 합니다." },
+        6: { name: "장미", emoji: "🌹", title: "치명적인 가시를 품은 로맨티스트", desc: "화려하고 화끈한 성격 뒤에 나만의 명확한 선(가시)을 가지고 있습니다. 정이 많지만 선을 넘는 무례함은 절대 용납하지 않는 칼 같은 면모가 있죠." },
+        7: { name: "라벤더", emoji: "🪻", title: "침착함 만렙의 평화 유지군", desc: "싸움이나 갈등을 극도로 싫어하며, 어떤 위기 상황이 와도 특유의 유연함과 침착함으로 우아하게 해결해 나가는 부드러운 카리스마가 특징입니다." },
+        8: { name: "해바라기", emoji: "🌻", title: "직진밖에 모르는 야생마", desc: "눈치 보지 않고 본인이 원하는 목표를 향해 해만 보며 달려가는 우직한 성격. 뒤끝이 전혀 없고 시원시원해서 동성 친구들에게 인기가 아주 많습니다." },
+        9: { name: "조선미인초", emoji: "🌸", mean: "은은한 반전 매력의 소유자", desc: "겉보기엔 얌전하고 순응적일 것 같지만 속에는 단단하고 엉뚱한 반전 매력을 품고 있습니다. 친해지면 기상천외한 유머 감각을 뽐냅니다." },
+        10: { name: "코스모스", emoji: "🌸", title: "자유로운 바람의 나그네", desc: "규칙과 통제를 싫어하고 유유자적 인생을 즐기고 싶어 하는 프리스타일. 유연한 사고방식을 가지고 있어 어떤 환경이든 적응을 아주 잘합니다." },
+        11: { name: "국화", emoji: "🪷", title: "단단한 내면의 고독한 사냥꾼", desc: "외유내강의 정석. 겉은 서글서글해 보여도 속에는 절대로 타협하지 않는 철학이 들어있습니다. 혼자만의 시간을 가질 때 가장 강력한 에너지가 나옵니다." },
+        12: { name: "포인세티아", emoji: "🎈", title: "인간 크리스마스 축제 인간", desc: "태생적으로 텐션이 높고 사람들과 어울려 노는 것을 사랑하는 파티 피플 기질이 다분합니다. 우울한 분위기를 단숨에 바꾸는 축복받은 에너지를 가졌습니다." }
+    };
+
+    const gemData = {
+        1: { name: "가넷", emoji: "🍒", title: "배신 없는 강철 의리파", desc: "한 번 내 사람이라고 생각하면 끝까지 신뢰를 지키는 묵직한 돌직구 성향. 가벼운 인간관계보다 깊고 좁은 우정을 선호합니다." },
+        2: { name: "자수정", emoji: "🔮", title: "내면의 현자 마법사", desc: "감정에 쉽게 휘둘리지 않고 이성적이고 현명한 판단을 내리는 브레인. 직관과 통찰력이 뛰어나 남들의 거짓말을 귀신같이 알아챕니다." },
+        3: { name: "아쿠아마린", emoji: "💎", title: "영원히 철들지 않는 피터팬", desc: "나이가 들어도 트렌디함을 잃지 않고 소년/소녀 같은 맑은 감성을 유지하는 능력자. 신선하고 창의적인 아이디어가 샘솟는 사람입니다." },
+        4: { name: "다이아몬드", emoji: "💎", title: "부러지지 않는 단단한 자존감", desc: "멘탈이 아주 단단하며 스스로에 대한 확신이 뚜렷합니다. 팩트 폭격을 잘 날리는 편이며 가식적인 것을 세상에서 제일 싫어합니다." },
+        5: { name: "에메랄드", emoji: "💚", title: "만병통치약 자연의 힐러", desc: "주변 사람들을 편안하게 해주는 마성의 소유자. 질투나 시기심이 적고 마음이 넓어 당신 주변에는 항상 사람들이 모여 편안함을 느낍니다." },
+        6: { name: "진주", emoji: "🦪", title: "우아함 속 숨겨진 유리 멘탈", desc: "매너가 좋고 품격이 있어 보이지만 은근히 사소한 말 한마디에 밤잠을 설칠 정도로 여린 감성의 소유자입니다. 스스로를 더 아껴주세요." },
+        7: { name: "루비", emoji: "❤️", title: "용암처럼 끓어오르는 정열맨", desc: "좋아하는 일이나 연애를 시작하면 심장이 폭발할 듯이 열정을 다 바치는 타입. 화끈하고 솔직해서 비밀을 잘 숨기지 못합니다." },
+        8: { name: "페리도트", emoji: "🍏", title: "평화와 화합의 인간 부적", desc: "친구들 사이에서 싸움이 났을 때 가운데서 중재를 가장 잘하는 평화 셔틀이자 갈등 해결사. 당신이 있는 모임은 늘 트러블 없이 굴러갑니다." },
+        9: { name: "사파이어", emoji: "💙", title: "오차 없는 지독한 완벽주의자", desc: "지혜롭고 성실함의 대명사. 약속 시간을 어기거나 일 처리가 늘어지는 꼴을 보지 못하며 계획한 바는 무조건 끝을 보는 똑순이/똑돌이입니다." },
+        10: { name: "오팔", emoji: "🦄", title: "변덕 가득한 천재 카멜레온", desc: "빛에 따라 색이 변하는 오팔처럼 종잡을 수 없는 매력의 소유자. 기분이 좋았다가도 급 가라앉는 등 알 수 없지만 그만큼 다재다능한 천재형입니다." },
+        11: { name: "토파즈", emoji: "💛", title: "지치지 않는 에너자이저 무한 체력", desc: "정신적으로나 육체적으로 회복탄력성이 매우 뛰어납니다. 힘든 일이 있어도 하루 자고 일어나면 훌훌 털어내는 긍정적인 파워가 강점입니다." },
+        12: { name: "터키석", emoji: "🩵", title: "목표를 쟁취하는 야망 스나이퍼", desc: "성공과 승리의 기운을 타고나서 경쟁 구도에서 눈빛이 바뀌는 타입니다. 원하는 것이 생기면 기어코 손에 넣고야 마는 집념의 야망가입니다." }
+    };
+
+    function getTimeText(timeStr) {
+        if(!timeStr) return "";
+        const hour = parseInt(timeStr.split(":")[0]);
+        if (hour >= 5 && hour < 9) return "<br><br>⏰ <b>시간 보너스:</b> 이른 아침의 기운이 섞여 시작의 추진력이 좋으나 오전 텐션 관리가 필수입니다.";
+        if (hour >= 9 && hour < 17) return "<br><br>⏰ <b>시간 보너스:</b> 한낮의 강한 기운으로 오지랖과 활력이 넘치니 에너지 분배를 잘해야 합니다.";
+        if (hour >= 17 && hour < 21) return "<br><br>⏰ <b>시간 보너스:</b> 저녁의 노을 감성이 들어와 새벽녘에 감성이 폭발해 흑역사를 정주행할 수 있습니다.";
+        return "<br><br>⏰ <b>시간 보너스:</b> 자정의 야행성 기운으로 낮에는 충전 모드, 밤만 되면 눈이 반짝이는 올빼미 기질이 있습니다.";
+    }
+
+    // 메인 연산 및 화면 출력
+    function generateFortune() {
+        const month = parseInt(document.getElementById("month").value);
+        const day = parseInt(document.getElementById("day").value);
+        const time = document.getElementById("time").value;
+
+        if (!month || !day) {
+            alert("생일의 월과 일을 먼저 선택해 주세요! 🔮");
+            return;
+        }
+
+        const timeBonus = getTimeText(time);
+        const card = document.getElementById("resultCard");
+        
+        // 1. 별자리 탭 선택 시
+        if (currentTab === 'star') {
+            let matched = starData.find(c => {
+                const [sMonth, sDay] = c.start;
+                const [eMonth, eDay] = c.end;
+                return (month === sMonth && day >= sDay) || (month === eMonth && day <= eDay);
+            });
+            if (!matched) matched = starData.find(c => c.name === "염소자리");
+
+            document.getElementById("outType").innerText = "CONSTELLATION FORTUNE";
+            document.getElementById("outType").style.color = "var(--accent-neon)";
+            document.getElementById("outIcon").innerText = matched.emoji;
+            document.getElementById("outTitle").innerText = matched.name;
+            document.getElementById("outSub").innerText = `"${matched.title}"`;
+            document.getElementById("outDesc").innerHTML = matched.desc + timeBonus;
+        } 
+        
+        // 2. 탄생화 탭 선택 시
+        else if (currentTab === 'flower') {
+            const matched = flowerData[month];
+            document.getElementById("outType").innerText = "BIRTH FLOWER FORTUNE";
+            document.getElementById("outType").style.color = "var(--accent-pink)";
+            document.getElementById("outIcon").innerText = matched.emoji;
+            document.getElementById("outTitle").innerText = matched.name;
+            document.getElementById("outSub").innerText = `"${matched.title}"`;
+            document.getElementById("outDesc").innerHTML = matched.desc + timeBonus;
+        } 
+        
+        // 3. 탄생석 탭 선택 시
+        else if (currentTab === 'gem') {
+            const matched = gemData[month];
+            document.getElementById("outType").innerText = "BIRTH GEM FORTUNE";
+            document.getElementById("outType").style.color = "var(--accent-gold)";
+            document.getElementById("outIcon").innerText = matched.emoji;
+            document.getElementById("outTitle").innerText = matched.name;
+            document.getElementById("outSub").innerText = `"${matched.title}"`;
+            document.getElementById("outDesc").innerHTML = matched.desc + timeBonus;
+        }
+
+        // 결과창 부드럽게 출력
+        card.style.display = "block";
+        card.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
