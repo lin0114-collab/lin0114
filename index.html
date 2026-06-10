@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>우주 대존엄! 별자리 사주 보러가기</title>
+    <title>운명의 나침반 - 선택형 종합 사주</title>
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
-            --accent-color: #66fcf1;
-            --text-color: #c5c6c7;
+            --bg-color: #0d0f1a;
+            --card-bg: #16192b;
+            --accent-neon: #66fcf1;
+            --accent-pink: #ff65a3;
+            --accent-gold: #fbc531;
+            --text-muted: #a5a7b4;
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
             background-color: var(--bg-color);
             color: #ffffff;
             margin: 0;
@@ -26,242 +28,115 @@
 
         .container {
             background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(102, 252, 241, 0.2);
+            padding: 30px 25px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 25px rgba(102,252,241,0.08);
             max-width: 500px;
             width: 100%;
             text-align: center;
-            border: 1px solid rgba(102, 252, 241, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         h1 {
-            color: var(--accent-color);
-            margin-bottom: 10px;
-            font-size: 24px;
+            color: var(--accent-neon);
+            margin-bottom: 5px;
+            font-size: 26px;
         }
 
         p.subtitle {
-            color: var(--text-color);
+            color: var(--text-muted);
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
-        .input-group {
+        /* 입력 양식 */
+        .input-box {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 16px;
             margin-bottom: 20px;
             text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--accent-color);
+            font-size: 13px;
+            color: var(--accent-neon);
             font-weight: bold;
+            text-transform: uppercase;
         }
 
-        .birth-inputs {
+        .flex-inputs {
             display: flex;
             gap: 10px;
+            margin-bottom: 15px;
         }
 
         select, input[type="time"] {
             width: 100%;
             padding: 12px;
-            background-color: #0b0c10;
-            border: 1px solid var(--text-color);
-            border-radius: 8px;
+            background-color: #0d0f1a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             box-sizing: border-box;
+            transition: all 0.3s;
         }
 
         select:focus, input:focus {
             outline: none;
-            border-color: var(--accent-color);
+            border-color: var(--accent-neon);
         }
 
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--accent-color);
+        /* 사주 종류 선택 탭 */
+        .tab-container {
+            display: flex;
+            background-color: #0d0f1a;
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
             border: none;
-            border-radius: 8px;
-            color: #0b0c10;
-            font-size: 18px;
+            color: var(--text-muted);
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
-        button:hover {
-            background-color: #45a29e;
-            box-shadow: 0 0 15px rgba(102, 252, 241, 0.5);
+        .tab-btn.active {
+            background-color: rgba(102, 252, 241, 0.15);
+            color: var(--accent-neon);
         }
 
-        /* 결과 화면 스타일 */
-        .result-box {
-            display: none;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px dashed rgba(102, 252, 241, 0.3);
-            animation: fadeIn 0.5s ease-in-out;
+        .tab-btn.active.btn-flower {
+            background-color: rgba(255, 101, 163, 0.15);
+            color: var(--accent-pink);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .tab-btn.active.btn-gem {
+            background-color: rgba(251, 197, 49, 0.15);
+            color: var(--accent-gold);
         }
 
-        .character-emoji {
-            font-size: 70px;
-            margin-bottom: 15px;
-            display: inline-block;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .constellation-name {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin-bottom: 5px;
-        }
-
-        .character-title {
-            font-size: 18px;
-            color: #ff007f;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .fortune-text {
-            background-color: rgba(0, 0, 0, 0.3);
+        /* 메인 실행 버튼 */
+        .submit-btn {
+            width: 100%;
             padding: 15px;
-            border-radius: 10px;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #e0e0e0;
-            text-align: left;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>🌌 우주 대존엄 별자리 사주</h1>
-    <p class="subtitle">당신의 생일과 탄생 시간에 숨겨진 진짜 성격을 찾아 드립니다!</p>
-
-    <div class="input-group">
-        <label>생년월일</label>
-        <div class="birth-inputs">
-            <select id="birth-month">
-                <option value="">월 선택</option>
-                <script>
-                    for(let i=1; i<=12; i++) document.write(`<option value="${i}">${i}월</option>`);
-                </script>
-            </select>
-            <select id="birth-day">
-                <option value="">일 선택</option>
-                <script>
-                    for(let i=1; i<=31; i++) document.write(`<option value="${i}">${i}일</option>`);
-                </script>
-            </select>
-        </div>
-    </div>
-
-    <div class="input-group">
-        <label for="birth-time">태어난 시간 (모르면 대략 입력해도 무방!)</label>
-        <input type="time" id="birth-time" value="12:00">
-    </div>
-
-    <button onclick="revealFortune()">내 운명의 캐릭터 확인하기 🔮</button>
-
-    <div id="result" class="result-box">
-        <div class="character-emoji" id="res-emoji">🦁</div>
-        <div class="constellation-name" id="res-name">사자자리</div>
-        <div class="character-title" id="res-title">"방구석 여포형 야심가"</div>
-        <div class="fortune-text" id="res-fortune">
-            결과 내용이 여기에 들어갑니다.
-        </div>
-    </div>
-</div>
-
-<script>
-    // 별자리 데이터 및 재미있는 캐릭터 설정
-    const constellationData = [
-        { name: "염소자리", start: [12, 22], end: [1, 19], emoji: "🐐", title: "철벽 치는 AI 로봇형 인간", desc: "은근히 계획 중독자라 인생 계획표를 분 단위로 짜는 타입. 겉으로는 조용해 보이지만 속으로는 이미 우주 정복 시나리오 다 짜놓은 무서운 사람입니다." },
-        { name: "물병자리", start: [1, 20], end: [2, 18], emoji: "👽", title: "지구에 잘못 불시착한 외계인", desc: "남들이 '예스' 할 때 혼자 '왜?'라고 외치는 독보적인 마이웨이. 특이하다는 말을 들으면 모욕이 아니라 칭찬으로 받아들이는 맑눈광(맑은 눈의 광인) 기질이 다분합니다." },
-        { name: "물고기자리", start: [2, 19], end: [3, 20], emoji: "🧜", title: "현실 도피 만렙 감성 장인", desc: "하루 평균 4시간 이상 상상의 나래를 펼치는 프로 망상러. 공감 능력이 너무 뛰어나 길가에 굴러가는 낙엽만 봐도 눈물 찔끔 흘릴 수 있는 촉촉한 영혼의 소유자입니다." },
-        { name: "양자리", start: [3, 21], end: [4, 19], emoji: "♈", title: "행동이 생각보다 빠른 인간 불도저", desc: "말보다 주먹(혹은 행동)이 먼저 나가는 타입. 일단 지르고 나서 수습하는 스타일이지만, 특유의 불타오르는 추진력으로 어떻게든 결과를 만들어내고야 마는 야생마입니다." },
-        { name: "황소자리", start: [4, 20], end: [5, 20], emoji: "🐂", title: "침대와 물아일체된 미식가", desc: "인생의 행복 순위 1위가 맛있는 음식 먹기, 2위가 누워있기인 평화주의자. 겉은 순해 보이지만 자기가 정한 선을 넘으면 황소고집이 발동해 그 누구도 꺾을 수 없습니다." },
-        { name: "쌍둥이자리", start: [5, 21], end: [6, 21], emoji: "🎭", title: "자아가 4개쯤 있는 프로 수다꾼", desc: "한시도 입을 쉬지 않거나 머릿속으로 끊임없이 수다를 떠는 정보 과부하 인간. 이리저리 호기심은 많아서 이것저것 다 건드리지만 진득하게 끝까지 하는 건 별로 없는 매력쟁이입니다." },
-        { name: "게자리", start: [6, 22], end: [7, 22], emoji: "🦀", title: "쿠쿠다스 멘탈의 방구석 마더 테레사", desc: "내 사람들에게는 쓸개까지 빼줄 정도로 다정하지만, 한 번 마음에 상처를 입으면 혼자만의 동굴로 들어가 버리는 타입. 집 돌이/집순이 끝판왕입니다." },
-        { name: "사자자리", start: [7, 23], end: [8, 22], emoji: "🦁", title: "주인공이 아니면 죽음을 달라는 관종", desc: "어디서나 센터에 서야 직성이 풀리는 본투비 연예인 체질. 칭찬을 먹고 자라기 때문에 '멋있다', '최고다' 한 마디만 해주면 간이라도 빼주는 단순하고 의리 넘치는 성격입니다." },
-        { name: "처녀자리", start: [8, 23], end: [9, 22], emoji: "🕵️", title: "인간 엑셀(Excel) 피지컬 버전", desc: "강박증과 정리 정돈의 끝판왕. 남들의 허점이 귀신같이 눈에 보여서 속으로 잔소리를 삼키느라 바쁩니다. 하지만 그만큼 일 처리 하나는 완벽하게 해내는 능력자!" },
-        { name: "천칭자리", start: [9, 23], end: [10, 23], emoji: "⚖️", title: "결정 장애를 앓고 있는 평화주의자", desc: "짜장면이냐 짬뽕이냐만 가지고도 30분 동안 고뇌할 수 있는 우유부단함의 아이콘. 하지만 모두에게 친절하고 매너가 좋아서 어딜 가나 인기가 많고 비주얼이 훌륭한 편입니다." },
-        { name: "전갈자리", start: [10, 24], end: [11, 22], emoji: "🦂", title: "비밀을 품은 치명적인 다크 히어로", desc: "포커페이스의 달인이자 은근한 집착 끝판왕. 나를 배신한 사람은 평생 기억하지만, 한 번 신뢰를 준 사람에게는 목숨도 걸 수 있는 알면 알수록 진국인 캐릭터입니다." },
-        { name: "사수자리", start: [11, 23], end: [12, 21], emoji: "🏹", title: "영혼에 브레이크가 없는 자유 영혼", desc: "구속받는 것을 세상에서 가장 싫어하고 언제든 떠날 준비가 되어 있는 나그네. 긍정 회로가 너무 과하게 돌아가서 가끔 대책 없어 보이지만, 그 맑은 매력에 다들 빠져듭니다." }
-    ];
-
-    // 태어난 시간에 따른 사주 조미료 (추가 텍스트)
-    function getTimeModifier(timeStr) {
-        if (!timeStr) return "시간을 알 수 없어 우주의 신비가 한 스푼 더해졌습니다.";
-        const hour = parseInt(timeStr.split(":")[0]);
-        
-        if (hour >= 5 && hour < 9) return "특히 <b>아침 기운</b>을 타고나, 아침에는 비실대더라도 낮이 될수록 영혼이 살아나는 '충전식 배터리' 성향이 결합되어 있습니다.";
-        if (hour >= 9 && hour < 17) return "특히 <b>해의 기운</b>이 한창일 때 태어나, 쓸데없이 정의롭고 남의 일에 오지랖 부리다 지치는 '사회 정의 구현' 성향이 섞여 있습니다.";
-        if (hour >= 17 && hour < 21) return "특히 <b>감성적인 저녁 기운</b>을 받아, 밤마다 플레이리스트를 뒤적거리며 새벽 감성에 젖는 '낭만 고양이' 성향이 추가되었습니다.";
-        return "특히 <b>은밀한 밤의 기운</b>을 타고나, 낮에는 얌전한 척하지만 밤만 되면 텐션이 폭발하거나 눈이 초롱초롱해지는 '야행성 올빼미' 기운이 강합니다.";
-    }
-
-    // 결과 확인 함수
-    function revealFortune() {
-        const month = parseInt(document.getElementById("birth-month").value);
-        const day = parseInt(document.getElementById("birth-day").value);
-        const time = document.getElementById("birth-time").value;
-
-        if (!month || !day) {
-            alert("태어난 달과 날짜를 올바르게 선택해주세요! 🌌");
-            return;
-        }
-
-        // 별자리 찾기 매칭 로직
-        let constellation = constellationData.find(c => {
-            const [sMonth, sDay] = c.start;
-            const [eMonth, eDay] = c.end;
-            
-            // 일반적인 월 범위 체크 (예: 3월 21일 ~ 4월 19일)
-            if (month === sMonth && day >= sDay) return true;
-            if (month === eMonth && day <= eDay) return true;
-            return false;
-        });
-
-        // 예외 처리 (연말/연초 걸쳐있는 염소자리 예외)
-        if (!constellation) {
-            constellation = constellationData.find(c => c.name === "염소자리");
-        }
-
-        // 시간에 따른 사주 멘트 결합
-        const timeComment = getTimeModifier(time);
-
-        // 화면에 결과 뿌려주기
-        document.getElementById("res-emoji").innerText = constellation.emoji;
-        document.getElementById("res-name").innerText = constellation.name;
-        document.getElementById("res-title").innerText = constellation.title;
-        document.getElementById("res-fortune").innerHTML = `${constellation.desc}<br><br>💡 <b>태어난 시간 분석 결과:</b><br>${timeComment}`;
-
-        // 결과창 부드럽게 보여주기
-        const resultBox = document.getElementById("result");
-        resultBox.style.display = "block";
-        resultBox.scrollIntoView({ behavior: 'smooth' });
-    }
-</script>
-
-</body>
-</html>
+            background: linear-gradient(135deg, var(--accent-neon), #398682);
+            border: none;
+            border-radius: 12px;
+            color: #0d0f1a;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
